@@ -11,12 +11,28 @@ fi
 
 echo "Hello $name"
 
-date="$(date +%a)"
-case $date in
-	Sat|Sun) echo "Happy Weekend";;
-	Thu|Fri) echo "It's almost the weekend";;
-	Mon|Tue) echo "Lets start this week strong";;
+day="$(date +%a)"
+day_number="$(date +%d)"
+ending="th."
+
+case $((day_number)) in
+  1) ending="st.";;
+  2) ending="nd.";;
+  3) ending="rd.";;
 esac
 
-echo "On this day: $date"
+case $day in
+	Sat|Sun) echo "Happy Weekend";;
+	Mon|Tue) echo "Lets start this week strong";;
+	Thu) echo "It's almost the weekend";;
+	Wen) echo "The week is coming along";;
+	Fri)
+		if (($((day_number)) > 7 && $((day_number)) < 14)); then
+			echo "Happy Focus Friday, Zendesk!"
+		else
+			echo "Happy Friday the $day_number$ending"
+		fi;;
+esac
+
+echo "On this day: $day the $day_number$ending"
 
