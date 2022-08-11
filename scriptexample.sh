@@ -53,7 +53,7 @@ type_out "It's $day the $day_number$ending,"
 case $day in
 	Sat|Sun) type_out "nice, the Weekend!";;
 	Mon|Tue) type_out "lets start this week strong.";;
-	Thu) type_out "it's almost the weekend.";;
+	Thu) type_out "almost the weekend.";;
 	Wen) type_out "the week is coming along.";;
 	Fri)
 		if (($((day_number)) > 7 && $((day_number)) < 14)); then
@@ -65,9 +65,16 @@ esac
 
 echo ""
 sleep 0.5
-type_out "Here is your weather forecast, for $city: "
+type_out "Would you like the weather forecast, for $city: "
+read ans
 echo ""
 sleep 0.5
+clear
 
-curl wttr.in/$city?u
+case $ans in
+  [Yy]* ) curl wttr.in/$city?u ;;
+  * ) type_out "Let me know if you change your mind about wanting to know the forecast." ;;
+esac
+
+type_out "Ok, bye."
 
