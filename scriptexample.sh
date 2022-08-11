@@ -32,11 +32,6 @@ else
 	type_out "Thanks for providing your name, $name."
 fi
 
-if [ -z "$city" ]
-	then
-		city="Denver"
-fi
-
 echo ""
 sleep 1
 day="$(date +%a)"
@@ -64,18 +59,28 @@ case $day in
 		fi;;
 esac
 
-echo ""
-sleep 0.5
-type_out "$name, would you like the weather forecast for $city?"
-read ans
-echo ""
-sleep 0.5
-clear
 
-case $ans in
-  [Yy]* ) curl wttr.in/$city?u ;;
-  * ) type_out "Let me know if you change your mind about wanting to know the forecast." ;;
-esac
+if [ -z "$city" ]
+	then
+		city="Denver"
+		echo ""
+    sleep 0.5
+    type_out "$name, would you like the weather forecast for $city?"
+    read ans
+    echo ""
+    sleep 0.5
+    clear
+
+    case $ans in
+      [Yy]* ) curl wttr.in/$city?u ;;
+      * ) type_out "Let me know if you change your mind about wanting to know the forecast." ;;
+    esac
+else
+  type_out "I see that you also supplied your location $name."
+  type_out "Let me check the $city weather report for you."
+  echo ""
+	curl wttr.in/$city?u
+fi
 
 type_out "Should I send you somewhere fun, $name?"
 read ans
