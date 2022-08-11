@@ -2,7 +2,7 @@
 
 type_out () {
   message="$1"
-  for i in $(seq 0 $(expr length "${message}")) ; do
+  for (( i=0; i<${#message}; i++ )); do
     letter=${message:$i:1}
     echo -n "$letter"
     case $letter in
