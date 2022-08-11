@@ -22,7 +22,8 @@ city=$2
 
 if [ -z "$name" ]
 	then
-		type_out "Who are you? ... "
+	  user=$(whoami)
+		type_out "Who are you ... $user ?  What name would you like to go by?"
 		read name
 		clear
 		sleep 1
@@ -40,12 +41,12 @@ echo ""
 sleep 1
 day="$(date +%a)"
 day_number="$(date +%d)"
-ending="th"
 
 case $((day_number)) in
   1) ending="st";;
   2) ending="nd";;
   3) ending="rd";;
+  *) ending="th";;
 esac
 
 type_out "It's $day the $day_number$ending,"
@@ -65,7 +66,7 @@ esac
 
 echo ""
 sleep 0.5
-type_out "Would you like the weather forecast, for $city: "
+type_out "$name, would you like the weather forecast for $city?"
 read ans
 echo ""
 sleep 0.5
@@ -76,5 +77,14 @@ case $ans in
   * ) type_out "Let me know if you change your mind about wanting to know the forecast." ;;
 esac
 
-type_out "Ok, bye."
+type_out "Should I send you somewhere fun, $name?"
+read ans
+
+case $ans in
+  [Yy]* ) case $OSTYPE in
+            msys ) start chrome http://nipball.com ;;
+            * ) open http://nipball.com ;;
+          esac;;
+  * ) type_out "Ok, I guess I'll just go without you." ;;
+esac
 
