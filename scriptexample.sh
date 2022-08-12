@@ -1,5 +1,18 @@
 #!/bin/bash
 
+start_to_say () {
+  sleep 0.03
+  clear
+  sleep 0.03
+  echo "" && echo "" && echo && echo ""
+  say "$1"
+}
+
+say () {
+  echo -n "        "
+  type_out "$1"
+}
+
 type_out () {
   message="$1"
   for (( i=0; i<${#message}; i++ )); do
@@ -15,25 +28,33 @@ type_out () {
 }
 
 resize -s 90 150
-clear
 
 name=$1
 city=$2
 
-if [ -z "$name" ]
-	then
-	  user=$(whoami)
-		type_out "Who are you ... $user ?  What name would you like to go by?"
-		read name
-		clear
-		sleep 1
-    type_out "Hello $name."
+if [ -z "$name" ]; then
+  user=$(whoami)
+  if [ -f "name.txt" ]; then
+    value=$(<./name.txt)
+    start_to_say "$user your back again, should I still call you $value?"
+    read ans
+    case $ans in
+      [Yy]* ) name=$value ;;
+      * ) say "What should I call you then?" && read name;;
+    esac
+  else
+    start_to_say "Who are you ... $user ?  What name would you like to go by?"
+    read name
+  fi
+
+  start_to_say "Hello $name."
 else
-	type_out "Thanks for providing your name, $name."
+  start_to_say "Thanks for providing your name, $name."
 fi
 
-echo ""
-sleep 1
+rm name.txt
+echo $name >> name.txt
+
 day="$(date +%a)"
 day_number="$(date +%d)"
 
@@ -44,52 +65,49 @@ case $((day_number)) in
   *) ending="th";;
 esac
 
-type_out "It's $day the $day_number$ending,"
+say "It's $day the $day_number$ending,"
 
 case $day in
-	Sat|Sun) type_out "nice, the Weekend!";;
-	Mon|Tue) type_out "lets start this week strong.";;
-	Thu) type_out "almost the weekend.";;
-	Wen) type_out "the week is coming along.";;
+	Sat|Sun) say "nice, the Weekend!";;
+	Mon|Tue) say "lets start this week strong.";;
+	Thu) say "almost the weekend.";;
+	Wen) say "the week is coming along.";;
 	Fri)
 		if (($((day_number)) > 7 && $((day_number)) < 14)); then
-			type_out "Happy Recharge Friday, Zendesk!"
+			say "Happy Recharge Friday, Zendesk!"
 		else
-			type_out "Happy Friday!"
+			say "Happy Friday!"
 		fi;;
 esac
 
 
-if [ -z "$city" ]
-	then
-		city="Denver"
-		echo ""
-    sleep 0.5
-    type_out "$name, would you like the weather forecast for $city?"
-    read ans
-    echo ""
-    sleep 0.5
-    clear
+if [ -z "$city" ]; then
+	city="Denver"
+	echo ""
+  sleep 0.5
+  say "$name, would you like the weather forecast for $city?"
+  read ans
+  echo ""
 
-    case $ans in
-      [Yy]* ) curl wttr.in/$city?u ;;
-      * ) type_out "Let me know if you change your mind about wanting to know the forecast." ;;
-    esac
+  case $ans in
+    [Yy]* ) curl wttr.in/$city?u ;;
+    * ) start_to_say "Let me know if you change your mind about wanting to know the forecast." ;;
+  esac
 else
-  type_out "I see that you also supplied your location $name."
-  type_out "Let me check the $city weather report for you."
+  start_to_say "I see that you also supplied your location $name."
+  say "Let me check the $city weather report for you."
   echo ""
 	curl wttr.in/$city?u
 fi
 
-type_out "Should I send you somewhere fun, $name?"
+say "Should I send you somewhere fun, $name?"
 read ans
 
 case $ans in
-  [Yy]* ) case $OSTYPE in
+  [Yy]* ) echo "Awesome, $name, check your browser!" ; case $OSTYPE in
             msys ) start chrome http://nipball.com ;;
             * ) open http://nipball.com ;;
           esac;;
-  * ) type_out "Ok, I guess I'll just go without you." ;;
+  * ) start_to_say "Ok, I guess I'll just go without you." ;;
 esac
 
