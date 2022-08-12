@@ -60,7 +60,8 @@ else
   start_to_say "Thanks for providing your name, $name."
 fi
 
-rm name.txt
+if [ -f "name.txt" ]; then rm name.txt fi
+fi
 echo $name >> name.txt
 
 day="$(date +%a)"
