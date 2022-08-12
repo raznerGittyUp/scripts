@@ -4,12 +4,19 @@ start_to_say () {
   sleep 0.03
   clear
   sleep 0.03
-  echo "" && echo "" && echo && echo ""
+  lines=$(( RANDOM % 20 ))
+  for (( i=0; i<lines; i++)); do
+    echo ""
+  done
   say "$1"
 }
 
 say () {
   echo -n "        "
+  lines=$(( RANDOM % 10 ))
+  for (( i=0; i<lines; i++)); do
+    echo -n " "
+  done
   type_out "$1"
 }
 
@@ -27,7 +34,8 @@ type_out () {
   echo ""
 }
 
-resize -s 90 150
+printf '\e[8;50;130t'
+#printf '\e[9;1t'
 
 name=$1
 city=$2
